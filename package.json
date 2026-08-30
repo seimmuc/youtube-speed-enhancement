@@ -1,0 +1,26 @@
+{
+  "name": "youtube-speed-enhancement",
+  "version": "0.0.1",
+  "description": "A browser extension (Chromium + Firefox) to enhance YouTube speed controls, written in TypeScript and bundled with esbuild",
+  "keywords": [
+    "web-extension",
+    "youtube",
+    "video",
+    "playback-speed"
+  ],
+  "author": "sei",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build-prod": "node scripts/build.mjs --production --clean",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.2.7",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Speed Enhancement",
+  "description": "Enhances YouTube playe speed options",
+  "version": "0.0.1",
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "youtube-speed-enhancement@sei.place",
+      "strict_min_version": "109.0"
+    },
+    "gecko_android": {
+      "strict_min_version": "109.0"
+    }
+  }
+}
