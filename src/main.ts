@@ -1,5 +1,5 @@
 import {
-  getLogo, getMoviePlayer, getSettingsContainer, getSettingsSpeedMenuItem, getVideo, isWatchPage, SpeedControlElems,
+  getLogo, getMoviePlayer, getSettingsContainer, getSettingsSpeedMenuItem, getVideo, isWatchPage
 } from './ytPageTools';
 import { mount, unmount } from 'svelte';
 import EnhancedSpeedPanel from './EnhancedSpeedPanel.svelte';
@@ -123,16 +123,19 @@ function onSettingsChange(mutationList: MutationRecord[], _observer: MutationObs
         if (!(child instanceof HTMLDivElement && child.classList.contains('ytp-panel'))) {
           continue;
         }
-        const sce = SpeedControlElems.createValid(child);
-        // TODO rewrite this part
-        if (sce) {
-          const oldContent = sce.getSPContent() as HTMLDivElement;
-          const context = new Map([
+
+        // Replace YouTube's speed panel with ours
+        if (child.classList.contains('ytp-panel') && child.children.length === 2 &&
+            child.querySelector(':scope > div.ytp-panel-header') instanceof HTMLDivElement) {
+          const oldContent = child.querySelector(':scope > div.ytp-variable-speed-panel-content');
+          if (oldContent instanceof HTMLDivElement) {
+            const context = new Map([
               ['heightPx', oldContent.style.height],
               ['appState', appState],
-          ] as Iterable<readonly [string, any]>);
-          oldContent.remove();
-          appState.injectData.speedPanelComponent = mount(EnhancedSpeedPanel, {target: sce.rootPanel, context});
+            ] as Iterable<readonly [string, any]>);
+            oldContent.remove();
+            appState.injectData.speedPanelComponent = mount(EnhancedSpeedPanel, {target: child, context});
+          }
         }
 
         // Display correct speed in the settings menu
