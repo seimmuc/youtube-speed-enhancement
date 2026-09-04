@@ -1,4 +1,6 @@
-import * as esbuild from "esbuild";
+import esbuild from "esbuild";
+import sveltePlugin from "esbuild-svelte";
+import { sveltePreprocess } from "svelte-preprocess";
 import { cp, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
@@ -24,12 +26,21 @@ async function main() {
 
   /** @type {esbuild.BuildOptions} */
   const options = {
-    entryPoints: ["src/content.ts"],
+    entryPoints: ["src/main.ts"],
     outbase: "src",
     outdir,
     bundle: true,
     format: "iife",
     target: "es2020",
+    conditions: ["svelte"],
+    plugins: [
+        sveltePlugin({
+          compilerOptions: {
+            css: "external",
+          },
+          preprocess: sveltePreprocess(),
+        }),
+    ],
     sourcemap: true,
     minify: false,
     logLevel: "info",

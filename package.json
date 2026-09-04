@@ -21,6 +21,9 @@
   "devDependencies": {
     "@types/chrome": "^0.2.7",
     "esbuild": "^0.28.2",
-    "typescript": "^7.0.2"
+    "esbuild-svelte": "^0.9.5",
+    "svelte": "^5.57.0",
+    "svelte-preprocess": "^6.0.5",
+    "typescript": "^6.0.0"
   }
 }
