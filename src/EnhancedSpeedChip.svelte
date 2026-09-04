@@ -4,9 +4,8 @@
   interface Props {
     speed: number;
     setSpeed: (spd: number) => boolean;
-    text?: string | undefined;
   }
-  let { speed, setSpeed, text = undefined }: Props = $props();
+  let { speed, setSpeed }: Props = $props();
 </script>
 
 <div class="ytp-variable-speed-panel-preset-button-wrapper">
@@ -16,7 +15,4 @@
   >
     <span>{NUM_FORMATTER.format(speed)}</span>
   </button>
-  {#if text}
-    <div class="ytp-variable-speed-panel-preset-button-label-text">{text}</div>
-  {/if}
 </div>

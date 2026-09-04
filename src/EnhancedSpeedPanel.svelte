@@ -41,7 +41,7 @@
       <div class="ytp-variable-speed-panel-premium-badge" tabindex="-1">
         <div class="ytp-variable-speed-panel-badge"></div>
       </div>
-      <span>{speed.toFixed(2)}x (s {heightPx})</span>
+      <span>{speed.toFixed(2)}x</span>
     </div>
   </div>
 
@@ -78,10 +78,8 @@
 
   <!-- "Chip" buttons -->
   <div class="ytp-variable-speed-panel-chips">
-    <!--  TODO add overflow wrapping  -->
     <EnhancedSpeedChip speed={0.5} {setSpeed} />
-    <EnhancedSpeedChip speed={1} {setSpeed} text="Normal" />
-    <EnhancedSpeedChip speed={1.25} {setSpeed} />
+    <EnhancedSpeedChip speed={1} {setSpeed} />
     <EnhancedSpeedChip speed={1.5} {setSpeed} />
     <EnhancedSpeedChip speed={2} {setSpeed} />
     <EnhancedSpeedChip speed={3} {setSpeed} />
@@ -90,6 +88,15 @@
     <EnhancedSpeedChip speed={8} {setSpeed} />
   </div>
 </div>
+
+<style>
+  .ytp-variable-speed-panel-chips {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow: scroll;
+  }
+</style>
 
 <!--
 YouTube's HTML:
