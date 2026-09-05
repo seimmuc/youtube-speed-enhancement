@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { AppState } from './app';
   import { getContext, onMount } from 'svelte';
-  import { MICRO_TOAST_TIMEOUT_MS, NUM_FORMATTER } from './consts';
+  import { MICRO_TOAST_TIMEOUT_MS, NUM_FORMATTER, TOAST_OVERLAY_CLASS } from './consts';
 
   const appState: AppState = getContext('appState');
 
@@ -35,7 +35,7 @@
   }
 </script>
 
-<div class={shown ? undefined : "ytp-bezel-text-hide"} style:display={shown ? undefined : "none"} data-layer="4">
+<div class={[TOAST_OVERLAY_CLASS, shown ? undefined : "ytp-bezel-text-hide"]} style:display={shown ? undefined : "none"} data-layer="4">
   <div bind:this={textWrapperElem} class="ytp-bezel-text-wrapper">
     <div class="ytp-bezel-text">{NUM_FORMATTER.format(speed)}x</div>
   </div>

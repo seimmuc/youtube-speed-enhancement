@@ -6,6 +6,7 @@ import EnhancedSpeedPanel from './EnhancedSpeedPanel.svelte';
 import { AppState } from './app';
 import {
   SPEED_PANEL_CLASS, SPEED_KEY_STEP_SIZE, SPEED_MIN, SPEED_MAX, INJECT_RETRY_COUNT, INJECT_RETRY_PERIOD_MS,
+  TOAST_OVERLAY_CLASS,
 } from './consts';
 import MicroToastOverlay from './MicroToastOverlay.svelte';
 
@@ -35,7 +36,14 @@ function reset(): void {
     appState.injectData.microToastOverlay = undefined;
   }
 
-  // TODO try to remove old DOM elements that may be left over if extension was disabled/reloaded
+  const oldEnhSpeedPanel = document.querySelector(`#movie_player div.ytp-popup div.ytp-popup-content div.${SPEED_PANEL_CLASS}`);
+  if (oldEnhSpeedPanel) {
+    oldEnhSpeedPanel.remove();
+  }
+  const oldToastOverlay = document.querySelector(`#movie_player div.${TOAST_OVERLAY_CLASS}`);
+  if (oldToastOverlay) {
+    oldToastOverlay.remove();
+  }
 
   // Remove keydown listener
   document.getRootNode().removeEventListener('keydown', onKeydown as EventListener, {capture: true});

@@ -2,6 +2,7 @@ export const INJECT_RETRY_COUNT = 10;
 export const INJECT_RETRY_PERIOD_MS = 200;
 
 export const SPEED_PANEL_CLASS = 'enhanced-speed-panel';
+export const TOAST_OVERLAY_CLASS = 'enhanced-speed-toast-overlay';
 
 export const SPEED_SLD_STEP_SIZE = 0.05;
 export const SPEED_KEY_STEP_SIZE = 0.25;
