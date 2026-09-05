@@ -118,10 +118,17 @@ function applyVideoSpeed(spd: number): boolean {
   if (smi !== null) {
     const content = smi.querySelector(':scope > div.ytp-menuitem-content');
     if (content) {
-      content.textContent = spd.toString();
+      content.textContent = speedToMenuText(spd);
     }
   }
   return true;
+}
+
+function speedToMenuText(speed: number): string {
+  if (speed === 1) {
+    return 'Normal';
+  }
+  return speed.toString();
 }
 
 function onSettingsChange(mutationList: MutationRecord[], _observer: MutationObserver): void {
@@ -151,7 +158,7 @@ function onSettingsChange(mutationList: MutationRecord[], _observer: MutationObs
         if (smi instanceof HTMLDivElement) {
           const content = smi.querySelector(':scope > div.ytp-menuitem-content');
           if (content) {
-            content.textContent = appState.getSpeed().toString();
+            content.textContent = speedToMenuText(appState.getSpeed());
           }
         }
       }
