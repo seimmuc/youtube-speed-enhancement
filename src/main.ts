@@ -1,6 +1,4 @@
-import {
-  getLogo, getMoviePlayer, getSettingsContainer, getSettingsSpeedMenuItem, getVideo, isWatchPage
-} from './ytPageTools';
+import { getLogo, getMoviePlayer, getSettingsContainer, getSettingsSpeedMenuItem, getVideo } from './ytPageTools';
 import { mount, unmount } from 'svelte';
 import EnhancedSpeedPanel from './EnhancedSpeedPanel.svelte';
 import { AppState } from './app';
@@ -19,8 +17,11 @@ function reset(): void {
     return;
   }
 
-  // Remove old settings observer if present
+  // Remove old observers if present
   appState.injectData.settingsObserver?.disconnect();
+  appState.injectData.settingsObserver = undefined;
+  appState.injectData.videoObserver?.disconnect();
+  appState.injectData.videoObserver = undefined;
 
   // Unmount Svelte components
   if (appState.injectData.speedPanelComponent !== undefined) {
@@ -36,6 +37,7 @@ function reset(): void {
     appState.injectData.microToastOverlay = undefined;
   }
 
+  // Clean up old DOM elements
   const oldEnhSpeedPanel = document.querySelector(`#movie_player div.ytp-popup div.ytp-popup-content div.${SPEED_PANEL_CLASS}`);
   if (oldEnhSpeedPanel) {
     oldEnhSpeedPanel.remove();
@@ -84,6 +86,19 @@ function inject(): boolean {
   const settingsObserver = new MutationObserver(onSettingsChange);
   settingsObserver.observe(settingsContainer, {childList: true});
   appState.injectData.settingsObserver = settingsObserver;
+
+  // Video speed gets reset during SPAs navigation to another video. This observer detects <video> tag's src change,
+  // which must always happen when navigating to (or from) a video page, and re-applies speed.
+  const vidObserver = new MutationObserver((mutationList: MutationRecord[]) => {
+    for (const mutationRecord of mutationList) {
+      if (mutationRecord.attributeName === 'src') {
+        applyVideoSpeed(appState.getSpeed());
+        break;
+      }
+    }
+  });
+  vidObserver.observe(vid, {attributes: true, attributeFilter: ['src']});
+  appState.injectData.videoObserver = vidObserver;
 
   // Add keydown listener
   document.getRootNode().addEventListener('keydown', onKeydown as EventListener, {capture: true});
@@ -180,11 +195,7 @@ function onSettingsChange(mutationList: MutationRecord[], _observer: MutationObs
 }
 
 function main(): void {
-  if (!isWatchPage()) {
-    return;
-  }
-
-  // Reset tings from previous injection as much as we can
+  // Reset page from previous injection as much as we can
   reset();
 
   // Try to inject

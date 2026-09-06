@@ -1,7 +1,3 @@
-export function isWatchPage(): boolean {
-  return window.location.pathname === '/watch';
-}
-
 export function getLogo(): HTMLAnchorElement | null {
   return document.querySelector('a#logo');
 }

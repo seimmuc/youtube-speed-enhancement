@@ -1,5 +1,6 @@
 export interface InjectionData {
   settingsObserver?: MutationObserver;
+  videoObserver?: MutationObserver;
   speedPanelComponent?: Record<string, any>;
   microToastOverlay?: Record<string, any>;
 }
