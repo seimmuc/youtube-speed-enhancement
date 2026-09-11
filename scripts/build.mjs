@@ -1,21 +1,43 @@
 import esbuild from 'esbuild';
 import sveltePlugin from 'esbuild-svelte';
 import { sveltePreprocess } from 'svelte-preprocess';
-import { cp, mkdir, rm } from 'node:fs/promises';
-import path from 'node:path';
+import { cp, stat, mkdir, rm, constants as fsc } from 'node:fs/promises';
 
 const isWatch = process.argv.includes('--watch');
 const isProd = process.argv.includes('--production');
 const cleanOutDir = process.argv.includes('--clean');
-const outdir = 'dist';
+const staticDir = 'static';
+const outDir = 'dist';
 
 async function resetOutDir() {
-  await rm(outdir, { recursive: true, force: true });
-  await mkdir(outdir, { recursive: true });
+  await rm(outDir, { recursive: true, force: true });
+  await mkdir(outDir, { recursive: true });
 }
 
 async function copyStaticFiles() {
-  await cp('static/manifest.json', path.join(outdir, 'manifest.json'));
+  await cp(staticDir, outDir, {
+    recursive: true,
+    mode: fsc.COPYFILE_FICLONE,
+    filter: async (src, dest) => {
+      const srcStat = await stat(src);
+      if (!srcStat.isFile()) {
+        // Copy directories, skip other non-files
+        return srcStat.isDirectory();
+      }
+      try {
+        const destStat = await stat(dest);
+        // Dest file exists, copy only if src is newer
+        return srcStat.mtime > destStat.mtime;
+      } catch (err) {
+        if (err.code === 'ENOENT') {
+          // Dest file does not exist, copy it
+          return true;
+        } else {
+          throw err;
+        }
+      }
+    }
+  });
 }
 
 async function main() {
@@ -28,7 +50,7 @@ async function main() {
   const options = {
     entryPoints: ['src/main.ts'],
     outbase: 'src',
-    outdir,
+    outdir: outDir,
     bundle: true,
     format: 'iife',
     target: 'es2020',
@@ -58,7 +80,7 @@ async function main() {
   } else {
     await ctx.rebuild();
     await ctx.dispose();
-    console.log(`Build complete (${outdir}/)`);
+    console.log(`Build complete (${outDir}/)`);
   }
 }
 
