@@ -1,3 +1,6 @@
+import { SPEED_MAX, SPEED_MIN, SPEED_PRECISION_FTR } from './consts';
+
+
 export interface InjectionData {
   settingsObserver?: MutationObserver;
   videoObserver?: MutationObserver;
@@ -21,6 +24,7 @@ export class AppState {
     return this.speed;
   }
   setSpeed(speed: number, showToast: boolean = false): boolean {
+    speed = toValidSpeed(speed);
     if (this.speedApplier(speed)) {
       this.speed = speed;
       this.speedUpdateListenerMenu?.(speed);
@@ -37,4 +41,9 @@ export class AppState {
   setToastSpeedUpdateListener(listener: ((spd: number) => void) | null) {
     this.speedUpdateListenerToast = listener;
   }
+}
+
+function toValidSpeed(speed: number): number {
+  // round the speed a bit, then clamp it
+  return Math.min(Math.max(Math.round(speed * SPEED_PRECISION_FTR) / SPEED_PRECISION_FTR, SPEED_MIN), SPEED_MAX);
 }

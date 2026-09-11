@@ -3,8 +3,8 @@ import { mount, unmount } from 'svelte';
 import EnhancedSpeedPanel from './EnhancedSpeedPanel.svelte';
 import { AppState } from './app';
 import {
-  SPEED_PANEL_CLASS, SPEED_KEY_STEP_SIZE, SPEED_MIN, SPEED_MAX, INJECT_RETRY_COUNT, INJECT_RETRY_PERIOD_MS,
-  TOAST_OVERLAY_CLASS,
+  SPEED_PANEL_CLASS, SPEED_KEY_STEP_SIZE, INJECT_RETRY_COUNT, INJECT_RETRY_PERIOD_MS, TOAST_OVERLAY_CLASS,
+  NUM_FORMATTER,
 } from './consts';
 import MicroToastOverlay from './MicroToastOverlay.svelte';
 
@@ -114,9 +114,8 @@ function onKeydown(event: KeyboardEvent): void {
   if (event.key === '<' || event.key === '>') {
     event.stopPropagation();
     const change = event.key === '<' ? -SPEED_KEY_STEP_SIZE : SPEED_KEY_STEP_SIZE;
-    const unclamped = Math.round((appState.getSpeed() + change) / SPEED_KEY_STEP_SIZE) * SPEED_KEY_STEP_SIZE;
-    const clamped = Math.min(Math.max(unclamped, SPEED_MIN), SPEED_MAX);
-    appState.setSpeed(clamped, true);
+    const rounded = Math.round((appState.getSpeed() + change) / SPEED_KEY_STEP_SIZE) * SPEED_KEY_STEP_SIZE;
+    appState.setSpeed(rounded, true);
   }
 }
 
@@ -143,7 +142,7 @@ function speedToMenuText(speed: number): string {
   if (speed === 1) {
     return 'Normal';
   }
-  return speed.toString();
+  return NUM_FORMATTER.format(speed);
 }
 
 function onSettingsChange(mutationList: MutationRecord[], _observer: MutationObserver): void {

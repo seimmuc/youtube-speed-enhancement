@@ -4,6 +4,7 @@ export const INJECT_RETRY_PERIOD_MS = 200;
 export const SPEED_PANEL_CLASS = 'enhanced-speed-panel';
 export const TOAST_OVERLAY_CLASS = 'enhanced-speed-toast-overlay';
 
+export const SPEED_PRECISION_FTR = 10 ** 3;
 export const SPEED_SLD_STEP_SIZE = 0.05;
 export const SPEED_KEY_STEP_SIZE = 0.25;
 export const SPEED_MIN = 0.05;
