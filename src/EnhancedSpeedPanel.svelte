@@ -9,11 +9,15 @@
   const appState: AppState = getContext('appState');
 
   let speed: number = $state(appState.getSpeed());
+  let dSpeed: number = $state(appState.getSpeed());
 
-  let ratio: number = $derived((speed - SPEED_MIN) / (SPEED_MAX - SPEED_MIN));
+  let dRatio: number = $derived((dSpeed - SPEED_MIN) / (SPEED_MAX - SPEED_MIN));
 
   onMount(() => {
-    appState.setMenuSpeedUpdateListener(spd => { speed = spd; });
+    appState.setMenuSpeedUpdateListener(spd => {
+      speed = spd;
+      dSpeed = spd;
+    });
     return () => {
       appState.setMenuSpeedUpdateListener(null);
     };
@@ -38,10 +42,7 @@
   <!-- Current speed indicator -->
   <div class="ytp-speed-display-container">
     <div class="ytp-variable-speed-panel-display" aria-live="polite">
-      <div class="ytp-variable-speed-panel-premium-badge" tabindex="-1">
-        <div class="ytp-variable-speed-panel-badge"></div>
-      </div>
-      <span>{speed.toFixed(2)}x</span>
+      <span>{dSpeed.toFixed(2)}x</span>
     </div>
   </div>
 
@@ -51,24 +52,20 @@
       <span>-</span>
     </button>
     <div class="ytp-input-slider-section">
-      <div class="ytp-speedslider-indicator-container">
-        <div class="ytp-speedslider-badge"></div>
-        <p class="ytp-speedslider-text">{speed.toFixed(2)}x</p>
-      </div>
       <input
               onchange={ev => {
                 if (!setSpeed(parseFloat(ev.currentTarget.value))) {
                   ev.currentTarget.value = speed.toString();
                 }
               }}
-              value="{speed}"
+              bind:value={dSpeed}
               class="ytp-input-slider ytp-speedslider ytp-varispeed-input-slider"
               tabindex="0"
               type="range"
               min="{SPEED_MIN}" max="{SPEED_MAX}" step="{SPEED_SLD_STEP_SIZE}"
               aria-valuenow="{speed}" aria-valuemin="{SPEED_MIN}" aria-valuemax="{SPEED_MAX}"
               aria-valuetext="{speed.toFixed(2)}"
-              style="--yt-slider-shape-gradient-percent: {Math.round(ratio * 100)}%;"
+              style="--yt-slider-shape-gradient-percent: {Math.round(dRatio * 100)}%;"
       >
     </div>
     <button onclick={buttonIncrement} class="ytp-button ytp-variable-speed-panel-button ytp-variable-speed-panel-increment-button" aria-label="Increase playback speed {SPEED_SLD_STEP_SIZE}">
