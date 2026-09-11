@@ -48,7 +48,6 @@ async function main() {
 
   if (isProd) {
     options.sourcemap = false;
-    options.minify = true;
   }
 
   const ctx = await esbuild.context(options);
