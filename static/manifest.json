@@ -4,6 +4,15 @@
   "description": "Enhances YouTube playe speed options",
   "version": "0.0.1",
 
+  "icons": {
+    "48":  "icons/icon_48.png",
+    "64":  "icons/icon_64.png",
+    "96":  "icons/icon_96.png",
+    "128":  "icons/icon_128.png",
+    "256":  "icons/icon_256.png",
+    "512":  "icons/icon_512.png"
+  },
+
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
