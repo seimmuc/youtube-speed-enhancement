@@ -1,11 +1,14 @@
 import esbuild from 'esbuild';
 import sveltePlugin from 'esbuild-svelte';
 import { sveltePreprocess } from 'svelte-preprocess';
-import { cp, stat, mkdir, rm, constants as fsc } from 'node:fs/promises';
+import { cp, stat, mkdir, rm, constants as fsc, readdir } from 'node:fs/promises';
+import AdmZip from "adm-zip";
+import path from "node:path";
 
 const isWatch = process.argv.includes('--watch');
 const isProd = process.argv.includes('--production');
 const cleanOutDir = process.argv.includes('--clean');
+const doPack = process.argv.includes('--pack');
 const staticDir = 'static';
 const outDir = 'dist';
 
@@ -81,6 +84,24 @@ async function main() {
     await ctx.rebuild();
     await ctx.dispose();
     console.log(`Build complete (${outDir}/)`);
+  }
+
+  if (doPack && !isWatch) {
+    console.log('Packing extension...');
+    const zipFilePath = `${outDir}.zip`;
+    const zip = new AdmZip();
+    const entries = await readdir(outDir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(outDir, entry.name);
+      if (entry.isFile()) {
+        zip.addLocalFile(fullPath);
+      } else if (entry.isDirectory()) {
+        zip.addLocalFolder(fullPath, entry.name);
+      }
+      // we intentionally ignore any other type of directory entry
+    }
+    await zip.writeZipPromise(zipFilePath, { overwrite: true });
+    console.log(`Packed extension was saved as ${zipFilePath}`);
   }
 }
 

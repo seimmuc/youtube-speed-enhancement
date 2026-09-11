@@ -15,11 +15,13 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "build-prod": "node scripts/build.mjs --production --clean",
+    "build-packed": "node scripts/build.mjs --production --clean --pack",
     "watch": "node scripts/build.mjs --watch",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/chrome": "^0.2.7",
+    "adm-zip": "^0.6.0",
     "esbuild": "^0.28.2",
     "esbuild-svelte": "^0.9.5",
     "svelte": "^5.57.0",
