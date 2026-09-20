@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.2.7",
+    "@types/webextension-polyfill": "^0.12.6",
     "adm-zip": "^0.6.0",
     "esbuild": "^0.28.2",
     "esbuild-svelte": "^0.9.5",
